@@ -1,0 +1,37 @@
+---
+- name: Create role working dir
+  ansible.builtin.file:
+    path: "{{ readyapi_role_working_dir }}"
+    state: directory
+    mode: 'u=rwx,go=rx'
+  become: true
+
+- name: Download ReadyAPI
+  ansible.builtin.get_url:
+    url: "{{ readyapi_url }}"
+    dest: "{{ readyapi_role_working_dir }}"
+    mode: 0777
+  register: downloaded_file
+  become: true 
+
+- name: Install ReadyAPI
+  ansible.builtin.command: "{{ downloaded_file.dest }} -dir {{ readyapi_install_dir }} -q"
+  changed_when: false
+  become: true
+
+- name: Find all ReadyAPI desktop files
+  ansible.builtin.find:
+    paths: /usr/share/applications,/usr/local/share/applications
+    file_type: file
+    patterns: "*.desktop"
+    contains: "Name=ReadyAPI {{ readyapi_version }}"
+  register: desktop_files
+  become: true
+
+- name: Replace category application with development
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: 'Categories=Application;'
+    replace: 'Categories=Development;'
+  with_items: "{{ desktop_files.files }}"
+  become: true

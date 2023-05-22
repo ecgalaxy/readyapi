@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Include role defaults vars
+      with_first_found:
+        - "../../defaults/main.yml"
+      ansible.builtin.include_vars: "{{ item }}"
+    - name: Check ReadyApi
+      ansible.builtin.shell: "{{ readyapi_install_dir }}/bin/testrunner.sh||true"
+      register: output
+    - name: Assert that ReadyApi is installed
+      ansible.builtin.assert:
+        that:
+        - "'readyapi/{{ readyapi_version }}' in output.stdout"
