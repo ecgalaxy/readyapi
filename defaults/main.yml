@@ -1,5 +1,5 @@
 ---
-readyapi_version: "3.51.0"
+readyapi_version: "3.53.0"
 readyapi_url: "https://dl.eviware.com/ready-api/{{readyapi_version}}/ReadyAPI-x64-{{readyapi_version}}.sh"
 readyapi_role_working_dir: /tmp/readyapi
 readyapi_install_dir: "/opt/smartbear/readyapi/{{ readyapi_version }}"
