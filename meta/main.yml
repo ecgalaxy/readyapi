@@ -22,6 +22,4 @@ galaxy_info:
     - rest
     - soap
     - testing
-dependencies:
- - role: ecgalaxy.common_packages
- - role: ecgalaxy.java_openjdk
+dependencies: []
